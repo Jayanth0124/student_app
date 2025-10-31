@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Student Marks</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Admin Panel - Student Marks</h1>
+
+  <form id="studentForm">
+    <input type="text" id="name" placeholder="Name" required>
+    <input type="text" id="subject" placeholder="Subject" required>
+    <input type="number" id="marks" placeholder="Marks" required>
+    <button type="submit">Add Student</button>
+  </form>
+
+  <h2>Student List</h2>
+  <table id="studentTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Subject</th>
+        <th>Marks</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script src="script.js"></script>
+</body>
+</html>

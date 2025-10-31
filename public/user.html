@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Marks</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Student Marks</h1>
+  <table id="studentTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Subject</th>
+        <th>Marks</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    async function loadStudents() {
+      const res = await fetch("/api/students");
+      const data = await res.json();
+      const tableBody = document.querySelector("tbody");
+      tableBody.innerHTML = data.map(s => `
+        <tr>
+          <td>${s.name}</td>
+          <td>${s.subject}</td>
+          <td>${s.marks}</td>
+        </tr>
+      `).join("");
+    }
+    loadStudents();
+  </script>
+</body>
+</html>
