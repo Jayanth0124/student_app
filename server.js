@@ -2,10 +2,12 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import path from "path";
+import cors from "cors"; // ✅ Add this line
 import { fileURLToPath } from "url";
 
 dotenv.config();
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 // 🔧 Fix for ES Modules path usage

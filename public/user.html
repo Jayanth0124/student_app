@@ -2,27 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Marks</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Student Marks</h1>
-  <table id="studentTable">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Subject</th>
-        <th>Marks</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div class="container">
+    <h1>📚 Student Marks</h1>
+    <table id="studentTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Subject</th>
+          <th>Marks</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <a href="index.html" class="back-btn">⬅ Back</a>
+  </div>
 
   <script>
+    const BASE_URL = "https://student-app-mongodb.onrender.com";
+
     async function loadStudents() {
-      const res = await fetch("/api/students");
+      const res = await fetch(`${BASE_URL}/students`);
       const data = await res.json();
-      const tableBody = document.querySelector("tbody");
+
+      const tableBody = document.querySelector("#studentTable tbody");
       tableBody.innerHTML = data.map(s => `
         <tr>
           <td>${s.name}</td>
@@ -31,6 +39,7 @@
         </tr>
       `).join("");
     }
+
     loadStudents();
   </script>
 </body>

@@ -1,43 +1,107 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 40px;
-    background: #f4f4f4;
+* {
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+  }
+  
+  body {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 30px;
+    width: 90%;
+    max-width: 700px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
   }
   
   h1, h2 {
-    color: #333;
-  }
-  
-  form {
+    text-align: center;
     margin-bottom: 20px;
   }
   
-  input {
-    margin-right: 10px;
-    padding: 5px;
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
   }
   
-  button {
-    padding: 5px 10px;
-    background: #0078d7;
-    color: white;
+  form input, form button {
+    padding: 10px;
+    border-radius: 8px;
     border: none;
-    cursor: pointer;
+    outline: none;
   }
   
-  button:hover {
-    background: #005fa3;
+  form input {
+    flex: 1;
+    min-width: 150px;
+  }
+  
+  form button {
+    background: #00c6ff;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  form button:hover {
+    background: #0072ff;
   }
   
   table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
+    text-align: center;
   }
   
   th, td {
-    padding: 10px;
-    border: 1px solid #ccc;
-    text-align: center;
+    padding: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+  }
+  
+  button {
+    cursor: pointer;
+    background: transparent;
+    color: #ff5c5c;
+    border: none;
+    font-size: 1.2em;
+  }
+  
+  .btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  .btn {
+    background: #00c6ff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.3s;
+  }
+  
+  .btn:hover {
+    background: #0072ff;
+  }
+  
+  .back-btn {
+    display: inline-block;
+    margin-top: 20px;
+    color: #fff;
+    text-decoration: none;
   }
   
