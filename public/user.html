@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Student Marks</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
@@ -17,30 +17,58 @@
           <th>Marks</th>
         </tr>
       </thead>
-      <tbody></tbody>
+      <tbody id="studentTableBody">
+        <!-- Data will be inserted here -->
+      </tbody>
     </table>
 
     <a href="index.html" class="back-btn">⬅ Back</a>
   </div>
 
   <script>
-    const BASE_URL = "https://student-app-mongodb.onrender.com";
+    // ✅ Deployed backend API URL
+    const API_URL = "https://student-app-mongodb.onrender.com/api/students";
 
+    // ✅ Load students from the API
     async function loadStudents() {
-      const res = await fetch(`${BASE_URL}/students`);
-      const data = await res.json();
+      try {
+        const res = await fetch(API_URL);
+        if (!res.ok) throw new Error("Failed to fetch student data");
 
-      const tableBody = document.querySelector("#studentTable tbody");
-      tableBody.innerHTML = data.map(s => `
-        <tr>
-          <td>${s.name}</td>
-          <td>${s.subject}</td>
-          <td>${s.marks}</td>
-        </tr>
-      `).join("");
+        const students = await res.json();
+        console.log("✅ Students fetched:", students);
+
+        displayStudents(students);
+      } catch (error) {
+        console.error("❌ Error fetching students:", error);
+        alert("Unable to load student data. Please try again later.");
+      }
     }
 
-    loadStudents();
+    // ✅ Display students in the table
+    function displayStudents(students) {
+      const tableBody = document.getElementById("studentTableBody");
+      tableBody.innerHTML = "";
+
+      if (!students.length) {
+        tableBody.innerHTML = `<tr><td colspan="3">No students found</td></tr>`;
+        return;
+      }
+
+      students.forEach((s) => {
+        const row = `
+          <tr>
+            <td>${s.name}</td>
+            <td>${s.subject}</td>
+            <td>${s.marks}</td>
+          </tr>
+        `;
+        tableBody.insertAdjacentHTML("beforeend", row);
+      });
+    }
+
+    // ✅ Auto-load when page opens
+    document.addEventListener("DOMContentLoaded", loadStudents);
   </script>
 </body>
 </html>

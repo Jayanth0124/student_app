@@ -1,17 +1,29 @@
-const form = document.getElementById("studentForm");
-const tableBody = document.querySelector("#studentTable tbody");
-
-// 🌐 Base API URL for Render deployment
+// ✅ Use your deployed backend API
 const API_URL = "https://student-app-mongodb.onrender.com/api/students";
 
-// 🔹 Load all students from database
+// ✅ Load students and show on both admin.html & user.html
 async function loadStudents() {
   try {
     const res = await fetch(API_URL);
-    const data = await res.json();
-    tableBody.innerHTML = data
-      .map(
-        (s) => `
+    if (!res.ok) throw new Error("Failed to fetch students");
+    const students = await res.json();
+    console.log("✅ Students:", students);
+    displayStudents(students);
+  } catch (err) {
+    console.error("❌ Error loading students:", err);
+  }
+}
+
+// ✅ Display students in a table
+function displayStudents(students) {
+  const adminTable = document.getElementById("adminTableBody");
+  const userTable = document.getElementById("studentTableBody");
+
+  // For Admin Page (with actions)
+  if (adminTable) {
+    adminTable.innerHTML = "";
+    students.forEach((s) => {
+      const row = `
         <tr>
           <td>${s.name}</td>
           <td>${s.subject}</td>
@@ -21,88 +33,89 @@ async function loadStudents() {
             <button onclick="deleteStudent('${s._id}')">🗑️</button>
           </td>
         </tr>
-      `
-      )
-      .join("");
-  } catch (err) {
-    console.error("❌ Error loading students:", err);
+      `;
+      adminTable.insertAdjacentHTML("beforeend", row);
+    });
+  }
+
+  // For User Page (read-only)
+  if (userTable) {
+    userTable.innerHTML = "";
+    students.forEach((s) => {
+      const row = `
+        <tr>
+          <td>${s.name}</td>
+          <td>${s.subject}</td>
+          <td>${s.marks}</td>
+        </tr>
+      `;
+      userTable.insertAdjacentHTML("beforeend", row);
+    });
   }
 }
 
-// 🔹 Add new student
-form.addEventListener("submit", async (e) => {
+// ✅ Add new student (Admin Page)
+document.getElementById("addForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
+  const name = document.getElementById("name").value.trim();
+  const subject = document.getElementById("subject").value.trim();
+  const marks = document.getElementById("marks").value.trim();
 
-  const student = {
-    name: document.getElementById("name").value,
-    subject: document.getElementById("subject").value,
-    marks: document.getElementById("marks").value,
-  };
+  if (!name || !subject || !marks) return alert("Please fill all fields!");
 
   try {
-    await fetch(API_URL, {
+    const res = await fetch(API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(student),
+      body: JSON.stringify({ name, subject, marks }),
     });
-    form.reset();
+
+    if (!res.ok) throw new Error("Failed to add student");
+
+    document.getElementById("addForm").reset();
+    alert("✅ Student added successfully!");
     loadStudents();
   } catch (err) {
     console.error("❌ Error adding student:", err);
   }
 });
 
-// 🔹 Edit student (fills form with existing data)
-function editStudent(id, name, subject, marks) {
-  document.getElementById("name").value = name;
-  document.getElementById("subject").value = subject;
-  document.getElementById("marks").value = marks;
-  form.setAttribute("data-edit-id", id);
-}
+// ✅ Edit student (Admin)
+async function editStudent(id, name, subject, marks) {
+  const newName = prompt("Edit Name:", name);
+  const newSubject = prompt("Edit Subject:", subject);
+  const newMarks = prompt("Edit Marks:", marks);
 
-// 🔹 Handle update if editing
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const editId = form.getAttribute("data-edit-id");
-  const student = {
-    name: document.getElementById("name").value,
-    subject: document.getElementById("subject").value,
-    marks: document.getElementById("marks").value,
-  };
+  if (!newName || !newSubject || !newMarks) return;
 
   try {
-    if (editId) {
-      await fetch(`${API_URL}/${editId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(student),
-      });
-      form.removeAttribute("data-edit-id");
-    } else {
-      await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(student),
-      });
-    }
+    const res = await fetch(`${API_URL}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: newName, subject: newSubject, marks: newMarks }),
+    });
 
-    form.reset();
+    if (!res.ok) throw new Error("Failed to update student");
+    alert("✅ Student updated successfully!");
     loadStudents();
   } catch (err) {
-    console.error("❌ Error saving student:", err);
+    console.error("❌ Error updating student:", err);
   }
-});
+}
 
-// 🔹 Delete student
+// ✅ Delete student (Admin)
 async function deleteStudent(id) {
+  if (!confirm("Are you sure you want to delete this student?")) return;
+
   try {
-    await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+    const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+    if (!res.ok) throw new Error("Failed to delete student");
+    alert("🗑️ Student deleted successfully!");
     loadStudents();
   } catch (err) {
     console.error("❌ Error deleting student:", err);
   }
 }
 
-// 🔹 Initial load
-loadStudents();
+// ✅ Auto-load students on page load
+document.addEventListener("DOMContentLoaded", loadStudents);
